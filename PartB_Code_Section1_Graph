@@ -1,4 +1,3 @@
-# Compute the T statistic for `sample_1` and `sample_2`
 # import necessary libraries
 import networkx as nx
 import matplotlib.pyplot as plt

@@ -73,7 +73,7 @@ edges_with_weights = [
     ("SS", "JJ", 4),
     ("SS", "PPM", 7),
     ("LLG", "FF", 3),
-    ("LLG", "SS", 2),
+    ("LLG", "SS", 4),
     ("LLG", "JJ", 8),
     ("WW", "FF", 4),
     ("WW", "LLD", 5),

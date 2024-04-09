@@ -94,3 +94,52 @@ for post in hash_table.values():
 
 
 
+# Test cases for all
+# Hash Table test case
+
+# Adding a specific post.
+unique_post = SocialMediaPost('2024-12-02 18:30', 'Enjoying traditional Emirati coffee. #EmiratiCulture', 100, '@local_coffee_lover')
+add_post(unique_post)
+
+# Finding the unique post by its datetime.
+test_datetime = '2024-12-02 18:30'
+found_post = find_post_by_datetime(test_datetime)
+assert found_post == unique_post, f"Test Case Failed: Post for datetime {test_datetime} was not found."
+print(f"Test Case for Requirement 1: Successfully found the post for datetime {test_datetime}.")
+
+
+# BST test case
+
+# Inserting posts into the BST.
+emirati_day_post = SocialMediaPost('2024-11-30 09:00', 'National Emirati Day coming up! #EmiratiDay', 250, '@emirati_events')
+new_year_post = SocialMediaPost('2025-01-01 00:01', 'Happy New Year from Dubai! #DubaiNYE', 500, '@dubai_nightlife')
+
+# These posts would be added as part of the stream, not just for testing
+bst = BinarySearchTree()
+bst.insert(unique_post)
+bst.insert(emirati_day_post)
+bst.insert(new_year_post)
+
+# Find posts in the time range of November to December 2024.
+start_range = '2024-11-01 00:00'
+end_range = '2024-12-31 23:59'
+posts_in_range = bst.find_posts_in_range(start_range, end_range)
+assert emirati_day_post in posts_in_range, "Test Case Failed: Emirati Day post not found in range."
+assert unique_post in posts_in_range, "Test Case Failed: Unique datetime post not found in range."
+print(f"Test Case for Requirement 2: Successfully found posts between {start_range} and {end_range}.")
+
+
+# Heap test case
+
+# Adding posts to the heap.
+for post in [unique_post, emirati_day_post, new_year_post]:
+    add_post_to_heap(post)
+
+# Retrieving the post with the most views.
+top_viewed_post = get_top_post()
+assert top_viewed_post == new_year_post, "Test Case Failed: The post with the most views was not retrieved."
+print(f"Test Case for Requirement 3: Successfully retrieved the post with the most views: '{top_viewed_post.post}'.")
+
+
+
+

@@ -17,3 +17,51 @@ def add_post(post):
 def find_post_by_datetime(datetime):
     return hash_table.get(datetime, None)  # returns the post if found, or None if not found
 
+
+# This class represents a node within the binary search tree, holding a social media post.
+class BSTNode:
+    def __init__(self, post):
+        self.post = post  # the social media post this node represents
+        self.left = None  # reference to the left child node in the bst
+        self.right = None  # reference to the right child node in the bst
+
+# This class represents the binary search tree itself.
+class BinarySearchTree:
+    def __init__(self):
+        self.root = None  # the root node of the tree, starts as None
+
+    # function to insert a new post into the tree
+    def insert(self, post):
+        if self.root is None:
+            self.root = BSTNode(post)  # if tree is empty, the post becomes the root
+        else:
+            self._insert(self.root, post)  # otherwise, start the recursive insertion process
+
+    # recursive function to insert a node in the correct location
+    def _insert(self, node, post):
+        if post.datetime < node.post.datetime:  # if post is earlier, go left
+            if node.left is None:
+                node.left = BSTNode(post)  # if no left child, this post becomes the left child
+            else:
+                self._insert(node.left, post)  # otherwise, recurse into the left subtree
+        else:  # if post is same time or later, go right
+            if node.right is None:
+                node.right = BSTNode(post)  # if no right child, this post becomes the right child
+            else:
+                self._insert(node.right, post)  # otherwise, recurse into the right subtree
+
+    # function to find all posts within a certain datetime range
+    def find_posts_in_range(self, start_datetime, end_datetime):
+        posts = []  # list to hold all posts within the range
+        self._find_posts_in_range(self.root, start_datetime, end_datetime, posts)  # start the recursive search
+        return posts  # return the list of posts found
+
+    # recursive function to traverse the tree and find posts in the datetime range
+    def _find_posts_in_range(self, node, start_datetime, end_datetime, posts):
+        if node is not None:  # if the node exists
+            if start_datetime <= node.post.datetime <= end_datetime:  # if the post's datetime is in range
+                posts.append(node.post)  # add the post to the list
+            # recurse to search the left and right subtrees
+            self._find_posts_in_range(node.left, start_datetime, end_datetime, posts)
+            self._find_posts_in_range(node.right, start_datetime, end_datetime, posts)
+

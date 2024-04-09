@@ -87,48 +87,54 @@ for node_id, label in node_labels.items():
 for start, end, weight in edges_with_weights:
     G.add_edge(start, end, weight=weight)
 
-# This function uses Dijkstra's algorithm to find the shortest path from a single source node to all other nodes in the graph
+# Dijkstra's algorithm to find the shortest path from a single source node to all other nodes in the graph
 def dijkstra(graph, start):
-    # Initial distances are set to infinity
+    # create a dictionary with all nodes setting their distances to infinity
     distances = {node: float('infinity') for node in graph.nodes}
-    # Distance to the start node is 0
+    # set the distance from the start node to itself to 0
     distances[start] = 0
 
-    # Priority queue to hold nodes to visit, initialized with the start node
+    # create a priority queue and add the start node with distance 0
     priority_queue = [(0, start)]
 
     while priority_queue:
-        # Pop the node with the smallest distance so far
+        # get the node from the queue that has the smallest distance
         current_distance, current_node = heapq.heappop(priority_queue)
         
-        # Explore neighbors of the current node
+        # check the distances to all neighbors of the current node
         for neighbor, data in graph[current_node].items():
+            # get the weight of the edge from current node to the neighbor
             weight = data['weight']
+            # calculate the distance from the start node to this neighbor through the current node
             distance = current_distance + weight
             
-            # Update the distance if a shorter path is found
+            # if this distance is smaller than the previously recorded distance
             if distance < distances[neighbor]:
+                # update the distance to this neighbor in the distances dictionary
                 distances[neighbor] = distance
+                # add this neighbor to the priority queue with the new distance
                 heapq.heappush(priority_queue, (distance, neighbor))
-    
+    # return the distances dictionary with the shortest distances from the start node to all others
     return distances
 
-# Test case function
+# test case function
 def run_dijkstra_test(graph, start_node, target_node=None):
+    # run the dijkstra function to find shortest distances from start_node
     distances = dijkstra(graph, start_node)
+    # if a target_node is specified, print the distance to just that node
     if target_node:
         print(f"Shortest distance from {start_node} to {target_node}: {distances[target_node]}")
     else:
+        # otherwise, print all the distances from the start_node
         print(f"Shortest distances from {start_node}: {distances}")
 
-# Example usage with your graph:
-# Assuming 'node_labels' and 'edges_with_weights' are defined as per your graph
+# test cases
 G = nx.Graph()
-G.add_nodes_from(node_labels.keys())
-G.add_weighted_edges_from(edges_with_weights)
+G.add_nodes_from(node_labels.keys()) # add all the nodes to the graph G
+G.add_weighted_edges_from(edges_with_weights) # add all the weighted edges to the graph G
 
-# Run the test case from 'JJ' to all nodes
+# run the test case 1 from 'JJ' to all nodes
 run_dijkstra_test(G, 'JJ')
 
-# Add another test case, for example from 'JJ' to 'TT'
-run_dijkstra_test(G, 'JJ', 'TT')
+# run test case 2 for from 'JJ' to 'TT'
+run_dijkstra_test(G, 'JJ', 'TT') # prints the shortest distance from 'JJ' to 'TT'

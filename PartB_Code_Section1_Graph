@@ -1,0 +1,152 @@
+# Compute the T statistic for `sample_1` and `sample_2`
+# import necessary libraries
+import networkx as nx
+import matplotlib.pyplot as plt
+import numpy as np
+
+# initialize an empty graph
+G = nx.Graph()
+
+# create a dictionary to label the nodes with their corresponding Fortnite locations
+node_labels = {
+    # each entry corresponds to a node label with the format "node abbreviation": "full location name"
+    "JJ": "Junk Junction",
+    "HH": "Haunted Hills",
+    "PP": "Pleasant Park",
+    "LL": "Loot Lake",
+    "SS": "Snobby Shores",
+    "TT": "Tilted Towers",
+    "SF": "Shifty Shafts",
+    "GG": "Greasy Grove",
+    "FF": "Flush Factory",
+    "LLD": "Lucky Landing",
+    "FFD": "Fatal Fields",
+    "SSD": "Salty Springs",
+    "RR": "Retail Row",
+    "LLG": "Lonely Lodge",
+    "WW": "Wailing Woods",
+    "RRS": "Risky Reels",
+    "TTM": "Tomato Temple",
+    "LLK": "Lazy Links",
+    "PPM": "Paradise Palms",
+}
+
+# create a list of tuples where each tuple contains two nodes and the weight of the edge between them (the weight is the travel distance between the locations)
+edges_with_weights = [
+    # tuple format is ("node1", "node2", weight)
+    ("JJ", "HH", 3),
+    ("HH", "PP", 3),
+    ("PP", "JJ", 3),
+    ("LL", "SS", 5),
+    ("SS", "TT", 5),
+    ("TT", "SF", 5),
+    ("SF", "LL", 5),
+    ("GG", "FF", 7),
+    ("FF", "LLD", 7),
+    ("LLD", "FFD", 8),
+    ("FFD", "SSD", 7),
+    ("SSD", "GG", 8),
+    ("RR", "LLG", 8),
+    ("LLG", "WW", 8),
+    ("WW", "RRS", 8),
+    ("RRS", "TTM", 8),
+    ("TTM", "LLK", 8),
+    ("LLK", "PPM", 8),
+    ("JJ", "LL", 1),
+    ("TT", "FFD", 3),
+    ("PPM", "RR", 8),
+    ("GG", "RR", 1),
+    ("GG", "LL", 1),
+    ("TTM", "FFD", 2),
+    ("RRS", "LLD", 2),
+    ("LLK", "FFD", 5),
+    ("LLK", "SSD", 4),
+    ("PPM", "SSD", 2),
+    ("SF", "SSD", 2),
+    ("JJ", "SSD", 6),
+    ("SF", "FFD", 4),
+    ("SF", "PP", 2),
+    ("TT", "HH", 3),
+    ("TT", "PP", 3),
+    ("SS", "LLD", 4),
+    ("TT", "LLD", 4),
+    ("SS", "HH", 3),
+    ("SS", "JJ", 4),
+    ("SS", "PPM", 7),
+    ("LLG", "FF", 3),
+    ("LLG", "SS", 2),
+    ("LLG", "JJ", 8),
+    ("WW", "FF", 4),
+    ("WW", "LLD", 5),
+]
+
+# add each node to the graph, ensuring they are included before layout calculation
+for node_id, label in node_labels.items():
+    G.add_node(node_id, label=label)
+
+# add each edge to the graph with the specified weights
+for start, end, weight in edges_with_weights:
+    G.add_edge(start, end, weight=weight)
+
+# set the figure size for the plot to ensure all nodes and labels fit (we chose figure size to 18x18 inches for a larger plot)
+plt.figure(figsize=(18, 18))
+
+# define levels for the nodes to organize them into concentric circles
+levels = {
+    # each level is a list of node labels
+    1: ["JJ", "HH", "PP"],
+    2: ["LL", "SS", "TT", "SF"],
+    3: ["GG", "FF", "LLD", "FFD", "SSD"],
+    4: ["RR", "LLG", "WW", "RRS", "TTM", "LLK", "PPM"],
+}
+
+# define colors for each level for visual distinction
+level_colors = {
+    # each level is assigned a color
+    1: 'gold',
+    2: 'lightgreen',
+    3: 'lightcoral',
+    4: 'lightskyblue'
+}
+
+# initialize a dictionary to hold the position of each node
+pos = {}
+
+# set the center point for the circles
+center = np.array([0.5, 0.5])
+
+# define a spacing value to determine the distance between circles
+radius_increment = 0.3
+
+# calculate the position for each node based on its level
+for level, nodes in levels.items():
+    # determine the radius of the current level's circle
+    circle_radius = level * radius_increment
+    # calculate the angular distance between nodes on the same level
+    angle_increment = 2 * np.pi / len(nodes)
+    for i, node in enumerate(nodes):
+        # calculate the position of each node on the circle
+        angle = i * angle_increment
+        x = center[0] + circle_radius * np.cos(angle)
+        y = center[1] + circle_radius * np.sin(angle)
+        pos[node] = (x, y)
+
+# draw nodes using the positions and colors defined
+for level, nodes in levels.items():
+    nx.draw_networkx_nodes(G, pos, nodelist=nodes, node_size=700, 
+                           node_color=level_colors[level], alpha=0.9)
+
+# draw node labels
+nx.draw_networkx_labels(G, pos, labels=node_labels, font_size=12)
+
+# draw edges with specified colors and labels for weights
+nx.draw_networkx_edges(G, pos, edge_color='gray')
+edge_labels = nx.get_edge_attributes(G, 'weight')
+nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_color='red')
+
+# remove axis for a cleaner look
+plt.axis('off')
+
+# display the plot
+plt.show()
+

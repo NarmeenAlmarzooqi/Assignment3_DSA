@@ -65,3 +65,32 @@ class BinarySearchTree:
             self._find_posts_in_range(node.left, start_datetime, end_datetime, posts)
             self._find_posts_in_range(node.right, start_datetime, end_datetime, posts)
 
+
+import heapq  # import the heapq module for heap operations
+
+# This class wraps around our social media post so we can use it in a max heap.
+class MaxHeapObj:
+    def __init__(self, post):
+        self.post = post  # the social media post
+
+    # this defines the comparison between two heap objects, reversed for max heap functionality
+    def __lt__(self, other):
+        return self.post.views > other.post.views
+
+# a list that will be treated as a heap
+heap = []
+
+# function to add a post to the heap
+def add_post_to_heap(post):
+    heapq.heappush(heap, MaxHeapObj(post))  # push the post wrapped in a MaxHeapObj onto the heap
+
+# function to get the post with the most views
+def get_top_post():
+    return heapq.heappop(heap).post if heap else None  # pop the top post off the heap, if it exists
+
+# Adding posts to the heap for test case setup
+for post in hash_table.values():
+    add_post_to_heap(post)  # this wraps the existing add functionality in a loop for convenience
+
+
+

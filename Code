@@ -1,0 +1,19 @@
+# This class represents a social media post with properties for date and time, the post content, views, and author.
+class SocialMediaPost:
+    def __init__(self, datetime, post, views, author):
+        self.datetime = datetime  # the date and time when the post was made
+        self.post = post  # the content of the post
+        self.views = views  # how many views the post has
+        self.author = author  # who made the post
+
+# a dictionary acting as our hash table for quick look-up of posts by datetime
+hash_table = {}
+
+# function to add a post to the hash table
+def add_post(post):
+    hash_table[post.datetime] = post  # the post's datetime is the key, the post object is the value
+
+# function to find a post by datetime
+def find_post_by_datetime(datetime):
+    return hash_table.get(datetime, None)  # returns the post if found, or None if not found
+

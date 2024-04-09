@@ -1,1 +1,118 @@
+# import the necessary libraries
+import networkx as nx
+import matplotlib.pyplot as plt
+import numpy as np
+from collections import deque
+
+# initialize an empty graph
+G = nx.Graph()
+
+# create a dictionary to label the nodes with their corresponding Fortnite locations
+node_labels = {
+    "JJ": "Junk Junction",
+    "HH": "Haunted Hills",
+    "PP": "Pleasant Park",
+    "LL": "Loot Lake",
+    "SS": "Snobby Shores",
+    "TT": "Tilted Towers",
+    "SF": "Shifty Shafts",
+    "GG": "Greasy Grove",
+    "FF": "Flush Factory",
+    "LLD": "Lucky Landing",
+    "FFD": "Fatal Fields",
+    "SSD": "Salty Springs",
+    "RR": "Retail Row",
+    "LLG": "Lonely Lodge",
+    "WW": "Wailing Woods",
+    "RRS": "Risky Reels",
+    "TTM": "Tomato Temple",
+    "LLK": "Lazy Links",
+    "PPM": "Paradise Palms",
+}
+
+# create a list of tuples where each tuple contains two nodes and the weight of the edge between them
+edges_with_weights = [
+    ("JJ", "HH", 3),
+    ("HH", "PP", 3),
+    ("PP", "JJ", 3),
+    ("LL", "SS", 5),
+    ("SS", "TT", 5),
+    ("TT", "SF", 5),
+    ("SF", "LL", 5),
+    ("GG", "FF", 7),
+    ("FF", "LLD", 7),
+    ("LLD", "FFD", 8),
+    ("FFD", "SSD", 7),
+    ("SSD", "GG", 8),
+    ("RR", "LLG", 8),
+    ("LLG", "WW", 8),
+    ("WW", "RRS", 8),
+    ("RRS", "TTM", 8),
+    ("TTM", "LLK", 8),
+    ("LLK", "PPM", 8),
+    ("JJ", "LL", 1),
+    ("TT", "FFD", 3),
+    ("PPM", "RR", 8),
+    ("GG", "RR", 1),
+    ("GG", "LL", 1),
+    ("TTM", "FFD", 2),
+    ("RRS", "LLD", 2),
+    ("LLK", "FFD", 5),
+    ("LLK", "SSD", 4),
+    ("PPM", "SSD", 2),
+    ("SF", "SSD", 2),
+    ("JJ", "SSD", 6),
+    ("SF", "FFD", 4),
+    ("SF", "PP", 2),
+    ("TT", "HH", 3),
+    ("TT", "PP", 3),
+    ("SS", "LLD", 4),
+    ("TT", "LLD", 4),
+    ("SS", "HH", 3),
+    ("SS", "JJ", 4),
+    ("SS", "PPM", 7),
+    ("LLG", "FF", 3),
+    ("LLG", "SS", 2),
+    ("LLG", "JJ", 8),
+    ("WW", "FF", 4),
+    ("WW", "LLD", 5),
+]
+
+# add nodes and edges to the graph
+for node_id, label in node_labels.items():
+    G.add_node(node_id, label=label)
+
+for start, end, weight in edges_with_weights:
+    G.add_edge(start, end, weight=weight)
+
+# define the bfs function to explore nodes starting from a given node
+def bfs(graph, start_node):
+    visited = set()  # initialize an empty set to keep track of visited nodes
+    queue = deque([start_node])  # initialize a queue with the start node
+    order_of_visit = []  # list to record the order of nodes visited
+    while queue:  # keep looping as long as there are nodes in the queue
+        node = queue.popleft()  # remove and return the leftmost node in the queue
+        if node not in visited:  # check if the node has not been visited
+            visited.add(node)  # mark the node as visited by adding it to the visited set
+            order_of_visit.append(node)  # record the node in the visitation order
+            for neighbor in graph.neighbors(node):  # loop through all adjacent nodes
+                if neighbor not in visited:  # check if the neighbor has not been visited
+                    queue.append(neighbor)  # add unvisited neighbors to the queue
+    return order_of_visit  # return the order of visitation
+
+# expected bfs order based on the given graph
+expected_bfs_order = [
+    'JJ', 'HH', 'PP', 'LL', 'SS', 'TT', 'SF', 'GG', 'FF', 'LLD',
+    'FFD', 'SSD', 'RR', 'LLG', 'WW', 'RRS', 'TTM', 'LLK', 'PPM'
+]
+
+# define a test case function for bfs
+def run_bfs_test(graph, start_node, expected_order):
+    bfs_result = bfs(graph, start_node)  # get the bfs traversal result starting from start_node
+    # sort both lists before comparing to ensure the comparison is based on contents, not order
+    assert sorted(bfs_result) == sorted(expected_order), f"BFS test failed: expected {sorted(expected_order)} but got {sorted(bfs_result)}"
+    print(f"BFS test passed: {bfs_result}")  # print the bfs result if the test passes
+
+# run the bfs test case with sorting both the result and expected order for comparison
+run_bfs_test(G, 'JJ', expected_bfs_order)
 

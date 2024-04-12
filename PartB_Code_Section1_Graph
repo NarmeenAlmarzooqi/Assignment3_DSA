@@ -1,7 +1,7 @@
 # import necessary libraries
-import networkx as nx
-import matplotlib.pyplot as plt
-import numpy as np
+import networkx as nx  # NetworkX library for graph manipulation
+import matplotlib.pyplot as plt  # Matplotlib library for plotting
+import numpy as np  # NumPy library for numerical computing
 
 # initialize an empty graph
 G = nx.Graph()
@@ -9,74 +9,73 @@ G = nx.Graph()
 # create a dictionary to label the nodes with their corresponding Fortnite locations
 node_labels = {
     # each entry corresponds to a node label with the format "node abbreviation": "full location name"
-    "JJ": "Junk Junction",
-    "HH": "Haunted Hills",
-    "PP": "Pleasant Park",
-    "LL": "Loot Lake",
-    "SS": "Snobby Shores",
-    "TT": "Tilted Towers",
-    "SF": "Shifty Shafts",
-    "GG": "Greasy Grove",
-    "FF": "Flush Factory",
-    "LLD": "Lucky Landing",
-    "FFD": "Fatal Fields",
-    "SSD": "Salty Springs",
-    "RR": "Retail Row",
-    "LLG": "Lonely Lodge",
-    "WW": "Wailing Woods",
-    "RRS": "Risky Reels",
-    "TTM": "Tomato Temple",
-    "LLK": "Lazy Links",
-    "PPM": "Paradise Palms",
+    "jj": "Junk Junction",
+    "hh": "Haunted Hills",
+    "pp": "Pleasant Park",
+    "ll": "Loot Lake",
+    "ss": "Snobby Shores",
+    "tt": "Tilted Towers",
+    "sf": "Shifty Shafts",
+    "gg": "Greasy Grove",
+    "ff": "Flush Factory",
+    "lld": "Lucky Landing",
+    "ffd": "Fatal Fields",
+    "ssd": "Salty Springs",
+    "rr": "Retail Row",
+    "llg": "Lonely Lodge",
+    "ww": "Wailing Woods",
+    "rrs": "Risky Reels",
+    "ttm": "Tomato Temple",
+    "llk": "Lazy Links",
+    "ppm": "Paradise Palms",
 }
 
 # create a list of tuples where each tuple contains two nodes and the weight of the edge between them (the weight is the travel distance between the locations)
 edges_with_weights = [
-    # tuple format is ("node1", "node2", weight)
-    ("JJ", "HH", 3),
-    ("HH", "PP", 3),
-    ("PP", "JJ", 3),
-    ("LL", "SS", 5),
-    ("SS", "TT", 5),
-    ("TT", "SF", 5),
-    ("SF", "LL", 5),
-    ("GG", "FF", 7),
-    ("FF", "LLD", 7),
-    ("LLD", "FFD", 8),
-    ("FFD", "SSD", 7),
-    ("SSD", "GG", 8),
-    ("RR", "LLG", 8),
-    ("LLG", "WW", 8),
-    ("WW", "RRS", 8),
-    ("RRS", "TTM", 8),
-    ("TTM", "LLK", 8),
-    ("LLK", "PPM", 8),
-    ("JJ", "LL", 1),
-    ("TT", "FFD", 3),
-    ("PPM", "RR", 8),
-    ("GG", "RR", 1),
-    ("GG", "LL", 1),
-    ("TTM", "FFD", 2),
-    ("RRS", "LLD", 2),
-    ("LLK", "FFD", 5),
-    ("LLK", "SSD", 4),
-    ("PPM", "SSD", 2),
-    ("SF", "SSD", 2),
-    ("JJ", "SSD", 6),
-    ("SF", "FFD", 4),
-    ("SF", "PP", 2),
-    ("TT", "HH", 3),
-    ("TT", "PP", 3),
-    ("SS", "LLD", 4),
-    ("TT", "LLD", 4),
-    ("SS", "HH", 3),
-    ("SS", "JJ", 4),
-    ("SS", "PPM", 7),
-    ("LLG", "FF", 3),
-    ("LLG", "SS", 4),
-    ("LLG", "JJ", 8),
-    ("WW", "FF", 4),
-    ("WW", "LLD", 5),
+    ("jj", "hh", {"weight": 3, "id": "R1", "name": "Junction-Hills Express"}),
+    ("hh", "pp", {"weight": 3, "id": "R2", "name": "Hills-Parkway"}),
+    ("pp", "jj", {"weight": 3, "id": "R3", "name": "Park-Junction Loop"}),
+    ("ll", "ss", {"weight": 5, "id": "R4", "name": "Lake-Shores Link"}),
+    ("ss", "tt", {"weight": 5, "id": "R5", "name": "Shores-Towers Trail"}),
+    ("tt", "sf", {"weight": 5, "id": "R6", "name": "Towers-Shafts Route"}),
+    ("sf", "ll", {"weight": 5, "id": "R7", "name": "Shafts-Lake Lane"}),
+    ("gg", "ff", {"weight": 7, "id": "R8", "name": "Grove-Factory Freeway"}),
+    ("ff", "lld", {"weight": 7, "id": "R9", "name": "Factory-Landing Avenue"}),
+    ("lld", "ffd", {"weight": 8, "id": "R10", "name": "Landing-Fields Drive"}),
+    ("ffd", "ssd", {"weight": 7, "id": "R11", "name": "Fields-Springs Connector"}),
+    ("ssd", "gg", {"weight": 8, "id": "R12", "name": "Springs-Grove Road"}),
+    ("rr", "llg", {"weight": 8, "id": "R13", "name": "Row-Lodge Link"}),
+    ("llg", "ww", {"weight": 8, "id": "R14", "name": "Lodge-Woods Way"}),
+    ("ww", "rrs", {"weight": 8, "id": "R15", "name": "Woods-Reels Road"}),
+    ("rrs", "ttm", {"weight": 8, "id": "R16", "name": "Reels-Temple Turnpike"}),
+    ("ttm", "llk", {"weight": 8, "id": "R17", "name": "Temple-Links Lane"}),
+    ("llk", "ppm", {"weight": 8, "id": "R18", "name": "Links-Palms Pathway"}),
+    ("jj", "ll", {"weight": 1, "id": "R19", "name": "Junction-Lake Shortcut"}),
+    ("tt", "ffd", {"weight": 3, "id": "R20", "name": "Towers-Fields Fast Track"}),
+    ("ppm", "rr", {"weight": 8, "id": "R21", "name": "Palms-Row Route"}),
+    ("gg", "rr", {"weight": 1, "id": "R22", "name": "Grove-Row Rapid"}),
+    ("gg", "ll", {"weight": 1, "id": "R23", "name": "Grove-Lake Express"}),
+    ("ttm", "ffd", {"weight": 2, "id": "R24", "name": "Temple-Fields Link"}),
+    ("rrs", "lld", {"weight": 2, "id": "R25", "name": "Reels-Landing Road"}),
+    ("llk", "ffd", {"weight": 5, "id": "R26", "name": "Links-Fields Lane"}),
+    ("llk", "ssd", {"weight": 4, "id": "R27", "name": "Links-Springs Street"}),
+    ("ppm", "ssd", {"weight": 2, "id": "R28", "name": "Palms-Springs Speedway"}),
+    ("sf", "ssd", {"weight": 2, "id": "R29", "name": "Shafts-Springs Shortcut"}),
+    ("jj", "ssd", {"weight": 6, "id": "R30", "name": "Junction-Springs Journey"}),
+    ("sf", "ffd", {"weight": 4, "id": "R31", "name": "Shafts-Fields Freeway"}),
+    ("sf", "pp", {"weight": 2, "id": "R32", "name": "Shafts-Park Pass"}),
+    ("tt", "hh", {"weight": 3, "id": "R33", "name": "Towers-Hills Highway"}),
+    ("tt", "pp", {"weight": 3, "id": "R34", "name": "Towers-Parkway"}),
+    ("ss", "lld", {"weight": 4, "id": "R35", "name": "Shores-Landing Lane"}),
+    ("tt", "lld", {"weight": 4, "id": "R36", "name": "Towers-Landing Track"}),
+    ("ss", "hh", {"weight": 3, "id": "R37", "name": "Shores-Hills Road"}),
+    ("ss", "jj", {"weight": 4, "id": "R38", "name": "Shores-Junction Drive"}),
+    ("ss", "ppm", {"weight": 7, "id": "R39", "name": "Shores-Palms Path"}),
+    ("llg", "ff", {"weight": 3, "id": "R40", "name": "Lodge-Factory Freeway"}),
+    ("llg", "ss", {"weight": 4, "id": "R41", "name": "Lodge-Shores Link"}),
+    ("llg", "jj", {"weight": 8, "id": "R42", "name": "Lodge-Junction Journey"}),
+    ("ww", "ff", {"weight": 4, "id": "R43", "name": "Woods-Factory Footpath"}),
+    ("ww", "lld", {"weight": 5, "id": "R44", "name": "Woods-Landing Walkway"}),
 ]
 
 # add each node to the graph, ensuring they are included before layout calculation
@@ -84,8 +83,11 @@ for node_id, label in node_labels.items():
     G.add_node(node_id, label=label)
 
 # add each edge to the graph with the specified weights
-for start, end, weight in edges_with_weights:
-    G.add_edge(start, end, weight=weight)
+for start, end, edge_data in edges_with_weights:
+    # Extracting the weight and name from the edge data
+    weight = edge_data["weight"]
+    name = edge_data["name"]
+    G.add_edge(start, end, weight=weight, name=name)
 
 # set the figure size for the plot to ensure all nodes and labels fit (we chose figure size to 18x18 inches for a larger plot)
 plt.figure(figsize=(18, 18))
@@ -93,10 +95,10 @@ plt.figure(figsize=(18, 18))
 # define levels for the nodes to organize them into concentric circles
 levels = {
     # each level is a list of node labels
-    1: ["JJ", "HH", "PP"],
-    2: ["LL", "SS", "TT", "SF"],
-    3: ["GG", "FF", "LLD", "FFD", "SSD"],
-    4: ["RR", "LLG", "WW", "RRS", "TTM", "LLK", "PPM"],
+    1: ["jj", "hh", "pp"],
+    2: ["ll", "ss", "tt", "sf"],
+    3: ["gg", "ff", "lld", "ffd", "ssd"],
+    4: ["rr", "llg", "ww", "rrs", "ttm", "llk", "ppm"],
 }
 
 # define colors for each level for visual distinction
@@ -140,12 +142,21 @@ nx.draw_networkx_labels(G, pos, labels=node_labels, font_size=12)
 
 # draw edges with specified colors and labels for weights
 nx.draw_networkx_edges(G, pos, edge_color='gray')
+
+# Customizing edge labels to include only weight in red and smaller font size
 edge_labels = nx.get_edge_attributes(G, 'weight')
-nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_color='red')
+for edge, label in edge_labels.items():
+    # calculate label position
+    x = (pos[edge[0]][0] + pos[edge[1]][0]) / 2
+    y = (pos[edge[0]][1] + pos[edge[1]][1]) / 2
+    # calculate rotation angle
+    angle = np.arctan2(pos[edge[1]][1] - pos[edge[0]][1], pos[edge[1]][0] - pos[edge[0]][0])
+    angle = np.degrees(angle)
+    # draw label with rotation
+    plt.text(x, y, f'{label} minutes\n{G.edges[edge]["name"]}', fontsize=8, color='red', ha='center', va='center', rotation=angle)
 
 # remove axis for a cleaner look
 plt.axis('off')
 
 # display the plot
 plt.show()
-

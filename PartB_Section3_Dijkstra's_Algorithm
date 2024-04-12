@@ -1,138 +1,119 @@
-# import the necessary libraries
-import networkx as nx
-import matplotlib.pyplot as plt
-import numpy as np
-import heapq
+# import necessary libraries
+import networkx as nx  # used for creating and manipulating graph structures
+import matplotlib.pyplot as plt  # used for creating visual plots
+import numpy as np  # used for numerical operations
+import heapq  # implements a priority queue for Dijkstra's algorithm
 
 # initialize an empty graph
-G = nx.Graph()
+G = nx.Graph()  # create a new, empty graph
 
 # create a dictionary to label the nodes with their corresponding Fortnite locations
 node_labels = {
-    "JJ": "Junk Junction",
-    "HH": "Haunted Hills",
-    "PP": "Pleasant Park",
-    "LL": "Loot Lake",
-    "SS": "Snobby Shores",
-    "TT": "Tilted Towers",
-    "SF": "Shifty Shafts",
-    "GG": "Greasy Grove",
-    "FF": "Flush Factory",
-    "LLD": "Lucky Landing",
-    "FFD": "Fatal Fields",
-    "SSD": "Salty Springs",
-    "RR": "Retail Row",
-    "LLG": "Lonely Lodge",
-    "WW": "Wailing Woods",
-    "RRS": "Risky Reels",
-    "TTM": "Tomato Temple",
-    "LLK": "Lazy Links",
-    "PPM": "Paradise Palms",
+    # each entry corresponds to a node label with the format "node abbreviation": "full location name"
+    "jj": "Junk Junction",
+    "hh": "Haunted Hills",
+    "pp": "Pleasant Park",
+    "ll": "Loot Lake",
+    "ss": "Snobby Shores",
+    "tt": "Tilted Towers",
+    "sf": "Shifty Shafts",
+    "gg": "Greasy Grove",
+    "ff": "Flush Factory",
+    "lld": "Lucky Landing",
+    "ffd": "Fatal Fields",
+    "ssd": "Salty Springs",
+    "rr": "Retail Row",
+    "llg": "Lonely Lodge",
+    "ww": "Wailing Woods",
+    "rrs": "Risky Reels",
+    "ttm": "Tomato Temple",
+    "llk": "Lazy Links",
+    "ppm": "Paradise Palms",
 }
 
-# create a list of tuples where each tuple contains two nodes and the weight of the edge between them
+# create a list of tuples where each tuple contains two nodes and the attributes for the edge between them
 edges_with_weights = [
-    ("JJ", "HH", 3),
-    ("HH", "PP", 3),
-    ("PP", "JJ", 3),
-    ("LL", "SS", 5),
-    ("SS", "TT", 5),
-    ("TT", "SF", 5),
-    ("SF", "LL", 5),
-    ("GG", "FF", 7),
-    ("FF", "LLD", 7),
-    ("LLD", "FFD", 8),
-    ("FFD", "SSD", 7),
-    ("SSD", "GG", 8),
-    ("RR", "LLG", 8),
-    ("LLG", "WW", 8),
-    ("WW", "RRS", 8),
-    ("RRS", "TTM", 8),
-    ("TTM", "LLK", 8),
-    ("LLK", "PPM", 8),
-    ("JJ", "LL", 1),
-    ("TT", "FFD", 3),
-    ("PPM", "RR", 8),
-    ("GG", "RR", 1),
-    ("GG", "LL", 1),
-    ("TTM", "FFD", 2),
-    ("RRS", "LLD", 2),
-    ("LLK", "FFD", 5),
-    ("LLK", "SSD", 4),
-    ("PPM", "SSD", 2),
-    ("SF", "SSD", 2),
-    ("JJ", "SSD", 6),
-    ("SF", "FFD", 4),
-    ("SF", "PP", 2),
-    ("TT", "HH", 3),
-    ("TT", "PP", 3),
-    ("SS", "LLD", 4),
-    ("TT", "LLD", 4),
-    ("SS", "HH", 3),
-    ("SS", "JJ", 4),
-    ("SS", "PPM", 7),
-    ("LLG", "FF", 3),
-    ("LLG", "SS", 2),
-    ("LLG", "JJ", 8),
-    ("WW", "FF", 4),
-    ("WW", "LLD", 5),
+    ("jj", "hh", {"weight": 3, "id": "R1", "name": "Junction-Hills Express"}),
+    ("hh", "pp", {"weight": 3, "id": "R2", "name": "Hills-Parkway"}),
+    ("pp", "jj", {"weight": 3, "id": "R3", "name": "Park-Junction Loop"}),
+    ("ll", "ss", {"weight": 5, "id": "R4", "name": "Lake-Shores Link"}),
+    ("ss", "tt", {"weight": 5, "id": "R5", "name": "Shores-Towers Trail"}),
+    ("tt", "sf", {"weight": 5, "id": "R6", "name": "Towers-Shafts Route"}),
+    ("sf", "ll", {"weight": 5, "id": "R7", "name": "Shafts-Lake Lane"}),
+    ("gg", "ff", {"weight": 7, "id": "R8", "name": "Grove-Factory Freeway"}),
+    ("ff", "lld", {"weight": 7, "id": "R9", "name": "Factory-Landing Avenue"}),
+    ("lld", "ffd", {"weight": 8, "id": "R10", "name": "Landing-Fields Drive"}),
+    ("ffd", "ssd", {"weight": 7, "id": "R11", "name": "Fields-Springs Connector"}),
+    ("ssd", "gg", {"weight": 8, "id": "R12", "name": "Springs-Grove Road"}),
+    ("rr", "llg", {"weight": 8, "id": "R13", "name": "Row-Lodge Link"}),
+    ("llg", "ww", {"weight": 8, "id": "R14", "name": "Lodge-Woods Way"}),
+    ("ww", "rrs", {"weight": 8, "id": "R15", "name": "Woods-Reels Road"}),
+    ("rrs", "ttm", {"weight": 8, "id": "R16", "name": "Reels-Temple Turnpike"}),
+    ("ttm", "llk", {"weight": 8, "id": "R17", "name": "Temple-Links Lane"}),
+    ("llk", "ppm", {"weight": 8, "id": "R18", "name": "Links-Palms Pathway"}),
+    ("jj", "ll", {"weight": 1, "id": "R19", "name": "Junction-Lake Shortcut"}),
+    ("tt", "ffd", {"weight": 3, "id": "R20", "name": "Towers-Fields Fast Track"}),
+    ("ppm", "rr", {"weight": 8, "id": "R21", "name": "Palms-Row Route"}),
+    ("gg", "rr", {"weight": 1, "id": "R22", "name": "Grove-Row Rapid"}),
+    ("gg", "ll", {"weight": 1, "id": "R23", "name": "Grove-Lake Express"}),
+    ("ttm", "ffd", {"weight": 2, "id": "R24", "name": "Temple-Fields Link"}),
+    ("rrs", "lld", {"weight": 2, "id": "R25", "name": "Reels-Landing Road"}),
+    ("llk", "ffd", {"weight": 5, "id": "R26", "name": "Links-Fields Lane"}),
+    ("llk", "ssd", {"weight": 4, "id": "R27", "name": "Links-Springs Street"}),
+    ("ppm", "ssd", {"weight": 2, "id": "R28", "name": "Palms-Springs Speedway"}),
+    ("sf", "ssd", {"weight": 2, "id": "R29", "name": "Shafts-Springs Shortcut"}),
+    ("jj", "ssd", {"weight": 6, "id": "R30", "name": "Junction-Springs Journey"}),
+    ("sf", "ffd", {"weight": 4, "id": "R31", "name": "Shafts-Fields Freeway"}),
+    ("sf", "pp", {"weight": 2, "id": "R32", "name": "Shafts-Park Pass"}),
+    ("tt", "hh", {"weight": 3, "id": "R33", "name": "Towers-Hills Highway"}),
+    ("tt", "pp", {"weight": 3, "id": "R34", "name": "Towers-Parkway"}),
+    ("ss", "lld", {"weight": 4, "id": "R35", "name": "Shores-Landing Lane"}),
+    ("tt", "lld", {"weight": 4, "id": "R36", "name": "Towers-Landing Track"}),
+    ("ss", "hh", {"weight": 3, "id": "R37", "name": "Shores-Hills Road"}),
+    ("ss", "jj", {"weight": 4, "id": "R38", "name": "Shores-Junction Drive"}),
+    ("ss", "ppm", {"weight": 7, "id": "R39", "name": "Shores-Palms Path"}),
+    ("llg", "ff", {"weight": 3, "id": "R40", "name": "Lodge-Factory Freeway"}),
+    ("llg", "ss", {"weight": 4, "id": "R41", "name": "Lodge-Shores Link"}),
+    ("llg", "jj", {"weight": 8, "id": "R42", "name": "Lodge-Junction Journey"}),
+    ("ww", "ff", {"weight": 4, "id": "R43", "name": "Woods-Factory Footpath"}),
+    ("ww", "lld", {"weight": 5, "id": "R44", "name": "Woods-Landing Walkway"}),
 ]
 
-# add nodes and edges to the graph
+# add nodes to the graph with specified labels
 for node_id, label in node_labels.items():
-    G.add_node(node_id, label=label)
+    G.add_node(node_id, label=label)  # adds a node to the graph with a label
 
-for start, end, weight in edges_with_weights:
-    G.add_edge(start, end, weight=weight)
+# add edges to the graph with specified attributes
+for start, end, attrs in edges_with_weights:
+    G.add_edge(start, end, **attrs)  # adds an edge between specified nodes with attributes like weight
 
-# Dijkstra's algorithm to find the shortest path from a single source node to all other nodes in the graph
 def dijkstra(graph, start):
-    # create a dictionary with all nodes setting their distances to infinity
-    distances = {node: float('infinity') for node in graph.nodes}
-    # set the distance from the start node to itself to 0
-    distances[start] = 0
-
-    # create a priority queue and add the start node with distance 0
-    priority_queue = [(0, start)]
+    """implements dijkstra's algorithm to find shortest paths from the start node"""
+    distances = {node: float('infinity') for node in graph.nodes()}  # sets initial distance to infinity for all nodes
+    distances[start] = 0  # sets the distance from the start node to itself as zero
+    priority_queue = [(0, start)]  # creates a priority queue and initializes it with the start node
 
     while priority_queue:
-        # get the node from the queue that has the smallest distance
-        current_distance, current_node = heapq.heappop(priority_queue)
-        
-        # check the distances to all neighbors of the current node
+        current_distance, current_node = heapq.heappop(priority_queue)  # removes and returns the node with the smallest distance
         for neighbor, data in graph[current_node].items():
-            # get the weight of the edge from current node to the neighbor
-            weight = data['weight']
-            # calculate the distance from the start node to this neighbor through the current node
-            distance = current_distance + weight
-            
-            # if this distance is smaller than the previously recorded distance
-            if distance < distances[neighbor]:
-                # update the distance to this neighbor in the distances dictionary
-                distances[neighbor] = distance
-                # add this neighbor to the priority queue with the new distance
-                heapq.heappush(priority_queue, (distance, neighbor))
-    # return the distances dictionary with the shortest distances from the start node to all others
-    return distances
+            weight = data['weight']  # retrieves the weight of the edge to the neighbor
+            distance = current_distance + weight  # calculates the total distance to the neighbor through the current node
+            if distance < distances[neighbor]:  # checks if the calculated distance is less than the previously recorded distance
+                distances[neighbor] = distance  # updates the shortest distance to this neighbor
+                heapq.heappush(priority_queue, (distance, neighbor))  # adds the neighbor to the priority queue
 
-# test case function
+    return distances  # returns a dictionary of shortest distances from the start node
+
 def run_dijkstra_test(graph, start_node, target_node=None):
-    # run the dijkstra function to find shortest distances from start_node
-    distances = dijkstra(graph, start_node)
-    # if a target_node is specified, print the distance to just that node
+    """runs dijkstra's algorithm from a start node and prints distances"""
+    distances = dijkstra(graph, start_node)  # runs dijkstra's algorithm to compute shortest paths
     if target_node:
+        # prints the shortest distance to a specific target node if provided
         print(f"Shortest distance from {start_node} to {target_node}: {distances[target_node]}")
     else:
-        # otherwise, print all the distances from the start_node
+        # otherwise, prints all shortest distances from the start node
         print(f"Shortest distances from {start_node}: {distances}")
 
-# test cases
-G = nx.Graph()
-G.add_nodes_from(node_labels.keys()) # add all the nodes to the graph G
-G.add_weighted_edges_from(edges_with_weights) # add all the weighted edges to the graph G
-
-# run the test case 1 from 'JJ' to all nodes
-run_dijkstra_test(G, 'JJ')
-
-# run test case 2 for from 'JJ' to 'TT'
-run_dijkstra_test(G, 'JJ', 'TT') # prints the shortest distance from 'JJ' to 'TT'
+# running tests to demonstrate functionality
+run_dijkstra_test(G, 'jj')  # tests shortest paths from 'jj' to all other nodes
+run_dijkstra_test(G, 'jj', 'tt')  # tests shortest path from 'jj' to 'tt' specifically
